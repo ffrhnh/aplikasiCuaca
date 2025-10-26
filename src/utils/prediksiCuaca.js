@@ -10,7 +10,7 @@ const forecast = async (latitude, longitude, callback) => {
     }
     
     // Gunakan HTTPS untuk koneksi yang lebih andal 
-    const url = `http://api.weatherstack.com/current?access_key=${WEATHERSTACK_KEY}&query=${latitude},${longitude}&units=m`;
+    const url = `https://api.weatherstack.com/current?access_key=${WEATHERSTACK_KEY}&query=${latitude},${longitude}&units=m`;
     
     try {
         const res = await axios.get(url);
