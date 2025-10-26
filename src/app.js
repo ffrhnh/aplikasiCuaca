@@ -3,7 +3,6 @@ const express = require('express')
 const hbs = require('hbs')
 const geocode = require('./utils/geocode') 
 const forecast = require('./utils/prediksiCuaca')
-require('dotenv').config();
 const axios = require('axios'); // kita pakai axios buat HTTP call
 
 const app = express();
