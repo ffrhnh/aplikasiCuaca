@@ -12,8 +12,16 @@ const ambilDataCuaca = (address) => {
     kotakPrediksi.classList.remove('error'); // Hapus class error jika ada
 
     // 2. Fetch Data
-    fetch('/infoCuaca?address='+ location).then((response)=>{
-        response.json().then((data)=>{
+    // KUNCI PERBAIKAN: Menggunakan variabel 'address' yang diterima sebagai argumen
+    fetch('/infoCuaca?address=' + encodeURIComponent(address)) 
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Gagal terhubung ke server.');
+            }
+            return response.json(); // Mengembalikan promise JSON
+        })
+        .then((data) => {
+            // Menangani data yang sudah diurai
             if (data.error) {
                 // Tampilan Error
                 kotakPrediksi.classList.add('error');
@@ -33,7 +41,7 @@ const ambilDataCuaca = (address) => {
             }
         })
         .catch(error => {
-            // Tampilan Error Jaringan
+            // Menangani error fetch atau error JSON
             kotakPrediksi.classList.add('error');
             kotakPrediksi.style.backgroundColor = '#FCDEDE'; // Warna error
             pesanLokasi.textContent = 'Terjadi Kesalahan Jaringan.';
