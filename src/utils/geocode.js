@@ -1,38 +1,37 @@
-const request = require('postman-request');
+const axios = require('axios'); // Pastikan Anda npm install axios jika belum
 
-const geocode = (address, callback) => {
+const geocode = async (address, callback) => {
     const place = encodeURIComponent(address);
+    // PASTIKAN process.env.MAP SUDAH BENAR
     const url = `${process.env.MAP}/search?q=${place}&format=json`;
 
     console.log('Geocode dipanggil dengan address:', address);
     console.log('Geocode membuat request ke URL:', url);
 
-    request(
-        {
-            url,
-            json: true,
+    try {
+        const res = await axios.get(url, {
             headers: { 'User-Agent': 'NetworkProgramming-Project/1.0' }
-        },
-        (err, res) => {
-            if (err) {
-                console.log('GEOCODE ERROR (err dari request):', err);
-                callback('Tidak dapat terkoneksi ke layanan', undefined);
-            } else if (!res || !res.body) {
-                console.log('GEOCODE ERROR (res/body kosong):', res);
-                callback('Respon tidak valid dari layanan geocoding', undefined);
-            } else if (res.body.length === 0) {
-                console.log('GEOCODE: Lokasi tidak ditemukan untuk:', address);
-                callback('Tidak dapat menemukan lokasi. Lakukan pencarian lokasi yang lain', undefined);
-            } else {
-                console.log('GEOCODE OK. Data[0]:', res.body[0]);
-                callback(undefined, {
-                    latitude: res.body[0].lat,
-                    longitude: res.body[0].lon,
-                    location: res.body[0].display_name,
-                });
-            }
+        });
+
+        const data = res.data;
+
+        if (data.length === 0) {
+            console.log('GEOCODE: Lokasi tidak ditemukan untuk:', address);
+            callback('Tidak dapat menemukan lokasi. Lakukan pencarian lokasi yang lain', undefined);
+        } else {
+            console.log('GEOCODE OK. Data[0]:', data[0]);
+            callback(undefined, {
+                latitude: data[0].lat,
+                longitude: data[0].lon,
+                location: data[0].display_name,
+            });
         }
-    );
+        
+    } catch (err) {
+        // Axios menangkap error koneksi dengan baik
+        console.log('GEOCODE ERROR (Axios):', err.message);
+        callback('Tidak dapat terkoneksi ke layanan geocoding. Cek variabel MAP.', undefined);
+    }
 }
 
 module.exports = geocode;
