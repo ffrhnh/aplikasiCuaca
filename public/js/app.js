@@ -1,5 +1,3 @@
-// web-server/public/js/app.js
-
 const formLokasi = document.querySelector('#form-lokasi');
 const inputLokasi = document.querySelector('#input-lokasi');
 const pesanLokasi = document.querySelector('#pesan-lokasi');
@@ -14,14 +12,8 @@ const ambilDataCuaca = (address) => {
     kotakPrediksi.classList.remove('error'); // Hapus class error jika ada
 
     // 2. Fetch Data
-    fetch(`/infoCuaca?address=${encodeURIComponent(address)}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Gagal mengambil data dari server.');
-            }
-            return response.json();
-        })
-        .then(data => {
+    fetch('/infoCuaca?address='+ location).then((response)=>{
+        response.json().then((data)=>{
             if (data.error) {
                 // Tampilan Error
                 kotakPrediksi.classList.add('error');

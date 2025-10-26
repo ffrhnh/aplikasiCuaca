@@ -7,7 +7,7 @@ require('dotenv').config();
 const axios = require('axios'); // kita pakai axios buat HTTP call
 
 const app = express();
-const port = 4000
+const port = process.env.PORT || 4000
 
 console.log('MAP sekarang adalah:', process.env.MAP)
 
@@ -136,5 +136,5 @@ app.get('*', (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log(`Server berjalan pada port ${port}.`)
+    console.log('Server berjalan pada port '+ port)
 })
