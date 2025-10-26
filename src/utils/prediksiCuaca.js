@@ -1,4 +1,4 @@
-const request = require('postman-request')
+const axios = require('axios');
 
 const forecast = (latitude, longitude, callback) => {
     // IMPORTANT: Weatherstack free plan pakai HTTP, bukan HTTPS

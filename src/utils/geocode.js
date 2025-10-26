@@ -28,7 +28,6 @@ const geocode = async (address, callback) => {
         }
         
     } catch (err) {
-        // Axios menangkap error koneksi dengan baik
         console.log('GEOCODE ERROR (Axios):', err.message);
         callback('Tidak dapat terkoneksi ke layanan geocoding. Cek variabel MAP.', undefined);
     }
