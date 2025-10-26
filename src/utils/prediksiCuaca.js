@@ -1,10 +1,10 @@
 const axios = require('axios');
 
-const forecast = async (latitude, longitude, callback) => {
+const forecast = async (latitude, longitude) => {
     const WEATHERSTACK_KEY = process.env.WEATHERSTACK_KEY;
 
     if (!WEATHERSTACK_KEY) {
-        return callback('Kunci API cuaca tidak disetel (WEATHERSTACK_KEY)', undefined);
+        throw new Error('Kunci API cuaca tidak disetel (WEATHERSTACK_KEY).');
     }
 
     const url = `https://api.weatherstack.com/current?access_key=${WEATHERSTACK_KEY}&query=${latitude},${longitude}&units=m`;
@@ -14,17 +14,24 @@ const forecast = async (latitude, longitude, callback) => {
         const data = res.data;
 
         if (data.error) {
-            return callback('Lokasi tidak ditemukan atau kunci API salah.', undefined);
+            throw new Error('Lokasi tidak ditemukan atau kunci API salah.');
         }
 
         const curr = data.current;
         const desc = curr.weather_descriptions && curr.weather_descriptions[0];
 
-        const resultTeks = `Saat ini ${desc}. Suhu ${curr.temperature}°C. Terasa seperti ${curr.feelslike}°C. Kelembapan ${curr.humidity}%. Kemungkinan hujan ${curr.precip}%.`;
+        return {
+            teks: `Saat ini ${desc}. Suhu ${curr.temperature}°C. Terasa seperti ${curr.feelslike}°C. Kelembapan ${curr.humidity}%. Kemungkinan hujan ${curr.precip}%.`,
+            suhu: curr.temperature,
+            feelsLike: curr.feelslike,
+            kelembapan: curr.humidity,
+            kemungkinanHujan: curr.precip,
+            deskripsi: desc
+        };
 
-        callback(undefined, resultTeks);
     } catch (err) {
-        callback('Tidak dapat terkoneksi ke layanan cuaca. Cek koneksi atau API key.', undefined);
+        console.error('FORECAST ERROR:', err.message);
+        throw new Error('Tidak dapat terkoneksi ke layanan cuaca. Cek koneksi atau API key.');
     }
 };
 

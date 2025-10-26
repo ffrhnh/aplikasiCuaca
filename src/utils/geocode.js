@@ -1,8 +1,6 @@
-// File: src/utils/geocode.js (FINAL VERSION)
-
 const axios = require('axios'); 
 
-const geocode = async (address) => { // CATATAN: Menghapus argumen 'callback'
+const geocode = async (address) => {
     const place = encodeURIComponent(address);
     const url = `${process.env.MAP}/search?q=${place}&format=json`;
 
@@ -18,11 +16,9 @@ const geocode = async (address) => { // CATATAN: Menghapus argumen 'callback'
 
         if (data.length === 0) {
             console.log('GEOCODE: Lokasi tidak ditemukan untuk:', address);
-            // Melempar error agar ditangkap oleh catch di app.js
             throw new Error('Tidak dapat menemukan lokasi. Lakukan pencarian lokasi yang lain'); 
         } else {
             console.log('GEOCODE OK. Data[0]:', data[0]);
-            // Mengembalikan hasil (Promise Resolves)
             return {
                 latitude: data[0].lat,
                 longitude: data[0].lon,
@@ -31,10 +27,9 @@ const geocode = async (address) => { // CATATAN: Menghapus argumen 'callback'
         }
         
     } catch (err) {
-        // Melempar error koneksi atau error HTTP
         console.error('GEOCODE ERROR (Axios):', err.message);
         throw new Error('Tidak dapat terkoneksi ke layanan geocoding. Pastikan URL MAP disetel.');
     }
-}
+};
 
 module.exports = geocode;
