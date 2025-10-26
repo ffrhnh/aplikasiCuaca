@@ -1,0 +1,50 @@
+{{! web-server/src/templates/views/berita.hbs }}
+
+{{>header}}
+
+<div class="main-content">
+    <div class="faq-container">
+        <h1 class="main-heading-small">
+            <span class="star-icon large">✶</span>
+            Berita Terkini
+        </h1>
+        
+        {{#if error}}
+            <div class="error-box aesthetic-box">
+                <p style="color: red; font-weight: bold;">Error Memuat Data:</p>
+                <p>{{error}}</p>
+            </div>
+        {{else if articles}}
+            <div class="news-list">
+                {{#each articles}}
+                    <div class="news-item faq-item">
+                        
+                        <h3 class="faq-question">
+                            {{title}} 
+                            <span class="cute-icon">📰</span>
+                        </h3>
+                        
+                        <div class="faq-answer-box">
+                            <p class="news-description">{{description}}</p>
+                            
+                            <p class="news-meta">
+                                Sumber: <strong>{{source}}</strong> | 
+                                Tanggal: {{date}}
+                            </p>
+                            
+                            {{#if url}}
+                                <a href="{{url}}" target="_blank" class="btn-primary read-more-btn">Baca Selengkapnya</a>
+                            {{/if}}
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        {{else}}
+            <div class="aesthetic-box">
+                <p>Saat ini belum ada berita yang sesuai dengan kriteria Anda.</p>
+            </div>
+        {{/if}}
+    </div>
+</div>
+
+{{>footer}}

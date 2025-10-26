@@ -1,0 +1,50 @@
+{{! web-server/templates/views/index.hbs }}
+
+{{>header}}
+
+<div class="main-content about-section">
+    <div class="about-content">
+        
+        <div class="text-column">
+            <h1 class="main-heading">
+                Prediksi Cuaca <br> Untuk Kehidupan Anda
+            </h1>
+            
+            <p class="sub-text">
+                Masukkan lokasi yang Anda cari di bawah ini untuk mendapatkan informasi cuaca terkini dan terakurat dari seluruh dunia.
+            </p>
+
+            <form id="form-lokasi" class="search-form">
+                <input id="input-lokasi" placeholder="Masukkan Kota, Negara, atau Kode Pos" required>
+                <button type="submit" class="btn-primary">Cari Cuaca</button>
+            </form>
+            
+            <div class="cta-buttons" style="margin-top: 20px;">
+                <a href="/tentang" class="btn-primary">Tentang Kami</a>
+            </div>
+            
+            <div id="results-container">
+                <p id="pesan-lokasi" class="status-message"></p>
+                <div id="kotak-prediksi" class="aesthetic-box">
+                    <p id="pesan-prediksi">Cari lokasi untuk melihat hasilnya.</p>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="image-column">
+            <div class="image-frame">
+                <img src="/img/ikonCuaca.jpg" alt="Ikon Cuaca" class="weather-icon-lg"> 
+                <div class="decor-branch"></div>
+            </div>
+            <div class="color-palette">
+                <span class="dot light-pink"></span>
+                <span class="dot pale-red"></span>
+                <span class="dot dark-brown"></span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{{>footer}}

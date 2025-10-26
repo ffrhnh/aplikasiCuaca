@@ -1,0 +1,574 @@
+/* ========================================================= */
+/* FILE: web-server/public/css/styles.css (REVISED)          */
+/* ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+/* ========================= */
+/* COLOR VARIABLES           */
+/* ========================= */
+:root {
+    --bg-primary: #F9F3EE;
+    --color-text: #4B2F31;
+    --color-accent: #C68A8A;
+    --color-pale-pink: #FEE7E3;
+    --color-dark-brown: #7F3E48;
+    --color-white: #FFFFFF;
+    --color-dark-card: #5D2D35; /* untuk card profile */
+}
+
+/* ========================= */
+/* GLOBAL LAYOUT             */
+/* ========================= */
+body {
+    background-color: var(--bg-primary);
+    color: var(--color-text);
+    font-family: Arial, Helvetica, sans-serif;
+
+    max-width: none;
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex-grow: 1;
+}
+
+/* ========================= */
+/* DECORATIVE STAR (ABSOLUTE*/
+/* ========================= */
+.star-decor-absolute {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    font-size: 5em;
+    color: var(--color-accent);
+    opacity: 0.8;
+    transform: rotate(-15deg);
+    z-index: 0;
+    filter: drop-shadow(0 0 5px rgba(255, 100, 100, 0.5));
+}
+
+/* ========================= */
+/* HEADER / NAV              */
+/* ========================= */
+header {
+    margin-top: 16px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.header-star {
+    color: var(--color-accent);
+    font-size: 0.9em;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+header a {
+    margin-right: 12px;
+    text-decoration: none;
+}
+
+.nav-btn {
+    text-decoration: none;
+    color: var(--color-dark-brown) !important;
+    border: 1px solid var(--color-accent);
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin-right: 12px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-btn:hover {
+    background-color: var(--color-dark-brown);
+    color: var(--color-white) !important;
+}
+
+/* ========================= */
+/* FOOTER                    */
+/* ========================= */
+footer {
+    color: #888888;
+    border-top: 1px solid #eeeeee;
+    margin-top: 15px;
+    padding: 16px 0;
+    text-align: center;
+}
+
+/* ========================================================= */
+/* PROFILE CARD (SECTION TENTANG / ABOUT ME)                 */
+/* ========================================================= */
+
+/* Wrapper card biar center dan lebar */
+.profile-card-container {
+    padding: 20px 16px;
+    margin: 40px auto;
+    width: 100%;
+    max-width: 1100px; /* lebarkan sedikit dari 1000px */
+    position: relative;
+    z-index: 1; /* di atas dekorasi background */
+}
+
+/* Card utama */
+.profile-card {
+    display: flex;
+    flex-wrap: nowrap;
+    background-color: var(--color-dark-card);
+    color: var(--color-white);
+    padding: 30px;
+    border-radius: 20px;
+    gap: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    align-items: flex-start;
+}
+
+/* Kolom foto */
+.profile-photo-area {
+    flex-shrink: 0;
+    width: 200px;
+    text-align: center;
+}
+
+/* Frame foto persegi 1:1 */
+.profile-photo-frame {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 15px;
+    border: 5px solid var(--color-accent);
+    margin-bottom: 15px;
+
+    /* backup color jika img belum load */
+    background-color: rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Foto di dalam frame:
+   - object-fit: cover biar tidak gepeng
+   - object-position: center biar wajah gak kepotong aneh
+*/
+.profile-photo-frame img {
+    width: 150%;
+    height: 150%;
+    display: block;
+    object-fit: cover;
+    object-position: center center;
+}
+
+/* Kolom teks */
+.profile-text-area {
+    flex-grow: 1;
+    min-width: 0; /* penting supaya text bisa wrap dan gak maksa lebar container */
+}
+
+.card-heading-name {
+    font-size: 2.2em;
+    font-weight: 700;
+    color: var(--color-pale-pink);
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.card-heading-title {
+    font-size: 1.1em;
+    color: var(--color-accent);
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+}
+
+.card-text-bio {
+    font-size: 0.9em;
+    line-height: 1.7;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.85);
+
+    text-align: left;
+}
+
+.social-icons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* sejajar kiri (lebih natural di card) */
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* ========================================================= */
+/* CTA BUTTONS DI CARD                                       */
+/* ========================================================= */
+.cta-buttons-card {
+    margin-top: 25px;
+}
+
+.cta-buttons-card .btn-primary {
+    background-color: var(--color-accent);
+    color: var(--color-white);
+}
+
+.cta-buttons-card .btn-primary:hover {
+    background-color: var(--color-pale-pink);
+    color: var(--color-dark-brown);
+}
+
+/* ========================================================= */
+/* EXISTING SECTIONS (ABOUT / WEATHER SEARCH / FAQ ETC)      */
+/* ========================================================= */
+
+.about-section {
+    padding: 20px 0;
+    overflow: hidden;
+}
+
+.about-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 50px;
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+.text-column {
+    flex: 1;
+    max-width: 50%;
+    width: 100%;
+    text-align: left;
+}
+
+.image-column {
+    flex: 1;
+    max-width: 50%;
+    position: relative;
+    padding-right: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.main-heading {
+    color: var(--color-dark-brown);
+    font-weight: 600;
+    font-size: 56px;
+    line-height: 1.0;
+    margin-bottom: 10px;
+}
+
+.sub-text {
+    line-height: 1.6;
+    margin-bottom: 20px;
+    opacity: 0.7;
+}
+
+.weather-icon-lg {
+    max-width: 70%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    opacity: 0.8;
+    border-radius: 20px;
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.search-form input {
+    border: 1px solid var(--color-accent);
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    width: 100%;
+    background-color: var(--color-white);
+    color: var(--color-dark-brown);
+}
+
+#results-container {
+    margin-top: 25px;
+    text-align: left;
+}
+
+.aesthetic-box {
+    background-color: var(--color-pale-pink);
+    border-radius: 15px;
+    padding: 20px;
+    min-height: 100px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s;
+}
+
+.aesthetic-box.error {
+    background-color: #FCDEDE !important;
+    color: #C0392B;
+}
+
+.btn-primary {
+    display: inline-block;
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-dark-brown);
+}
+
+.play-icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border: 1px solid var(--color-accent);
+    border-radius: 50%;
+    color: var(--color-accent);
+    text-decoration: none;
+    margin-left: 15px;
+}
+
+.image-frame {
+    position: relative;
+    background-color: var(--color-pale-pink);
+    border-radius: 40px;
+    padding: 20px;
+}
+
+.image-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 25px;
+}
+
+.color-palette {
+    position: absolute;
+    right: 0;
+    bottom: 20%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid var(--color-white);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.dot.light-pink { background-color: var(--color-accent); }
+.dot.pale-red { background-color: var(--color-pale-pink); }
+.dot.dark-brown { background-color: var(--color-dark-brown); }
+
+.decor-branch {
+    position: absolute;
+    top: 50%;
+    left: -50px;
+}
+
+.stats-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.stat-box {
+    text-align: center;
+    padding: 15px;
+    border-radius: 10px;
+    width: 120px;
+    transition: transform 0.3s;
+}
+
+.stat-box.light-pink {
+    background-color: var(--color-pale-pink);
+}
+
+.stat-box.pale-red {
+    background-color: var(--color-accent);
+    color: var(--color-white);
+}
+
+.stat-box.dark-brown {
+    background-color: var(--color-dark-brown);
+    color: var(--color-white);
+}
+
+.stat-number {
+    font-size: 1.8em;
+    font-weight: 700;
+    margin: 0;
+}
+
+.stat-label {
+    font-size: 0.8em;
+    opacity: 0.8;
+    margin: 0;
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+    text-align: left;
+}
+
+.main-heading-small {
+    font-size: 32px;
+    color: var(--color-dark-brown);
+    font-weight: 600;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.faq-item {
+    margin-bottom: 25px;
+    border-radius: 10px;
+}
+
+.faq-question {
+    color: var(--color-accent);
+    font-size: 1.1em;
+    margin-top: 0;
+    margin-bottom: 0px;
+    cursor: pointer;
+    background-color: var(--color-pale-pink);
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.faq-answer-box {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-pale-pink);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    padding: 15px 20px;
+    margin-top: -5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.faq-answer-box p {
+    font-size: 0.9em;
+    line-height: 1.6;
+    color: var(--color-text);
+    margin: 0;
+    padding-bottom: 5px;
+}
+
+.cute-icon {
+    font-size: 1.2em;
+    margin-left: 10px;
+    color: var(--color-dark-brown);
+    opacity: 0.7;
+    transition: transform 0.2s ease-in-out;
+}
+
+.faq-question:hover .cute-icon {
+    transform: rotate(15deg) scale(1.1);
+}
+
+/* ========================================================= */
+/* RESPONSIVE TWEAKS                                         */
+/* ========================================================= */
+@media (max-width: 768px) {
+
+    header h1 {
+        font-size: 40px;
+    }
+
+    .profile-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-photo-area {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .profile-text-area {
+        flex-grow: 1;
+    }
+
+    .card-heading-name {
+        font-size: 1.8em;
+    }
+
+    .card-heading-title {
+        font-size: 1em;
+        text-align: center;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+
+    .about-content {
+        flex-direction: column;
+        gap: 30px;
+        max-width: 600px;
+        padding: 0 16px;
+    }
+
+    .text-column,
+    .image-column {
+        max-width: 100%;
+        padding-right: 0;
+        text-align: center;
+    }
+
+    .main-heading {
+        font-size: 36px;
+        line-height: 1.1;
+    }
+}
+
+.read-more-btn {
+    display: block;
+    width: fit-content;
+    margin-top: 15px;
+    font-size: 0.9em;
+    padding: 8px 15px;
+}
+
+.news-meta {
+    font-size: 0.8em;
+    opacity: 0.7;
+    margin-top: 5px;
+}

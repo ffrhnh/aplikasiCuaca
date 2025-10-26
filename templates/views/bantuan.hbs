@@ -1,0 +1,49 @@
+{{>header}}
+
+<div class="main-content">
+    <div class="faq-container">
+        <h1 class="main-heading-small">
+            Pertanyaan yang Sering Diajukan (FAQ)
+        </h1>
+
+        <div class="faq-item">
+            <h3 class="faq-question">a. Halaman ini digunakan untuk apa? <span class="cute-icon">💡</span></h3>
+            <div class="faq-answer-box">
+                <p>Halaman Bantuan (FAQ) ini dirancang untuk menyediakan informasi dan jawaban atas pertanyaan umum mengenai penggunaan Aplikasi Cek Cuaca ini. Mulai dari fungsi aplikasi hingga dasar-dasar teknologi API yang digunakan dalam proyek ini.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <h3 class="faq-question">b. Apa itu API? <span class="cute-icon">🔗</span></h3>
+            <div class="faq-answer-box">
+                <p><strong>API (Application Programming Interface)</strong> adalah seperangkat definisi, protokol, dan alat untuk membangun perangkat lunak aplikasi. Sederhananya, API adalah mekanisme yang memungkinkan dua komponen perangkat lunak yang berbeda untuk berkomunikasi satu sama lain. Dalam aplikasi cuaca ini, API digunakan untuk menghubungkan server kami dengan penyedia data cuaca eksternal (pihak ketiga) dan layanan geocoding (lokasi).</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <h3 class="faq-question">c. Salah satu pola arsitektur API adalah RESTful. Jelaskan. <span class="cute-icon">✨</span></h3>
+            <div class="faq-answer-box">
+                <p><strong>RESTful (Representational State Transfer)</strong> adalah salah satu pola arsitektur API yang paling populer. RESTful API beroperasi menggunakan protokol HTTP standar. Prinsip utama REST adalah: ia memperlakukan setiap sumber daya (seperti data cuaca atau lokasi) sebagai entitas yang dapat diakses melalui URL (Uniform Resource Locator) dan menggunakan metode HTTP standar (seperti GET, POST, PUT, DELETE) untuk memanipulasi sumber daya tersebut.</p>
+                <p><strong>Penting:</strong> Aplikasi Cek Cuaca ini menggunakan pola arsitektur <strong>RESTful</strong> untuk mengambil data lokasi dan cuaca dari layanan pihak ketiga.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <h3 class="faq-question">d. Bagaimana cara mencari lokasi cuaca? <span class="cute-icon">🔍</span></h3>
+            <div class="faq-answer-box">
+                <p>Anda dapat mencari lokasi cuaca dengan mengetikkan nama kota (misalnya, "Padang"), nama negara, atau bahkan kode pos di kolom pencarian pada halaman utama, lalu klik tombol "Cari Lokasi".</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <h3 class="faq-question">e. Apakah aplikasi ini dapat digunakan di mana saja (di luar Indonesia)? <span class="cute-icon">✈️</span></h3>
+            <div class="faq-answer-box">
+                <p>Ya, aplikasi ini terhubung dengan penyedia data cuaca global, sehingga Anda dapat mencari informasi cuaca untuk kota mana pun di seluruh dunia.</p>
+            </div>
+        </div>
+
+    </div>
+    
+</div>
+
+{{>footer}}
