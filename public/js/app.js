@@ -1,63 +1,84 @@
 const formLokasi = document.querySelector('#form-lokasi');
 const inputLokasi = document.querySelector('#input-lokasi');
 const pesanLokasi = document.querySelector('#pesan-lokasi');
-const kotakPrediksi = document.querySelector('#kotak-prediksi'); // Target kotak estetik
-const pesanPrediksi = document.querySelector('#pesan-prediksi'); // Target teks di dalam kotak
+const kotakPrediksi = document.querySelector('#kotak-prediksi'); // box hasil
+const pesanPrediksi = document.querySelector('#pesan-prediksi'); // isi box hasil
+
+function setLoadingState(lokasiUser) {
+    pesanLokasi.textContent = lokasiUser
+        ? `Mencari cuaca untuk "${lokasiUser}"...`
+        : 'Memuat...';
+
+    kotakPrediksi.classList.remove('error');
+    kotakPrediksi.style.backgroundColor = 'var(--color-pale-pink)';
+    pesanPrediksi.innerHTML = 'Mohon tunggu sebentar...';
+}
+
+function setErrorState(pesanError) {
+    kotakPrediksi.classList.add('error');
+    kotakPrediksi.style.backgroundColor = '#FCDEDE';
+    pesanLokasi.textContent = 'Terjadi Kesalahan.';
+    pesanPrediksi.innerHTML = `<strong>Error:</strong> ${pesanError}`;
+}
+
+function setSuccessState(data) {
+    kotakPrediksi.classList.remove('error');
+    kotakPrediksi.style.backgroundColor = 'var(--color-pale-pink)';
+
+    // Teks atas
+    pesanLokasi.textContent = `Hasil untuk: ${data.lokasi}`;
+
+    // Teks detail
+    // prediksiCuaca = string panjang yang sudah disiapkan backend (teks gabungan)
+    // detail = objek angka (suhu, kelembapan, dll)
+    pesanPrediksi.innerHTML = `
+        <p><strong>Prediksi:</strong> ${data.prediksiCuaca}</p>
+        <p>Suhu sekarang: ${data.detail.suhu}°C (Feels like ${data.detail.feelsLike}°C)</p>
+        <p>Kelembapan: ${data.detail.kelembapan}%</p>
+        <p>Kemungkinan hujan: ${data.detail.kemungkinanHujan}%</p>
+    `;
+}
 
 const ambilDataCuaca = (address) => {
-    // 1. Reset Tampilan
-    pesanLokasi.textContent = 'Memuat...';
-    kotakPrediksi.style.backgroundColor = 'var(--color-pale-pink)'; // Warna loading
-    pesanPrediksi.innerHTML = 'Mohon tunggu sebentar...'; 
-    kotakPrediksi.classList.remove('error'); // Hapus class error jika ada
+    // 1. Tampilkan state loading
+    setLoadingState(address);
 
-    // 2. Fetch Data
-    // KUNCI PERBAIKAN: Menggunakan variabel 'address' yang diterima sebagai argumen
-    fetch('/infoCuaca?address=' + encodeURIComponent(address)) 
+    // 2. Fetch API backend kamu
+    fetch('/infoCuaca?address=' + encodeURIComponent(address))
         .then((response) => {
             if (!response.ok) {
                 throw new Error('Gagal terhubung ke server.');
             }
-            return response.json(); // Mengembalikan promise JSON
+            return response.json();
         })
         .then((data) => {
-            // Menangani data yang sudah diurai
             if (data.error) {
-                // Tampilan Error
-                kotakPrediksi.classList.add('error');
-                kotakPrediksi.style.backgroundColor = '#FCDEDE'; // Warna error
-                pesanLokasi.textContent = 'Gagal menemukan lokasi.';
-                pesanPrediksi.innerHTML = `<strong>Error:</strong> ${data.error}`;
+                // Error dari backend (misal lokasi tidak ketemu / API key salah / koneksi cuaca gagal)
+                setErrorState(data.error);
             } else {
-                // Tampilan Sukses
-                kotakPrediksi.classList.remove('error');
-                kotakPrediksi.style.backgroundColor = 'var(--color-pale-pink)'; // Warna sukses
-                pesanLokasi.textContent = `Hasil untuk: ${data.lokasi}`;
-                
-                // Format Prediksi agar lebih mudah dibaca
-                pesanPrediksi.innerHTML = `
-                    <p><strong>Prediksi:</strong> ${data.prediksiCuaca}</p>
-                `;
+                // Sukses
+                setSuccessState(data);
             }
         })
-        .catch(error => {
-            // Menangani error fetch atau error JSON
-            kotakPrediksi.classList.add('error');
-            kotakPrediksi.style.backgroundColor = '#FCDEDE'; // Warna error
-            pesanLokasi.textContent = 'Terjadi Kesalahan Jaringan.';
-            pesanPrediksi.innerHTML = `<strong>Kesalahan:</strong> ${error.message}`;
+        .catch((error) => {
+            // Error jaringan browser-ke-server (misal offline)
+            setErrorState(error.message);
         });
 };
 
 formLokasi.addEventListener('submit', (e) => {
-    e.preventDefault(); 
-    const lokasi = inputLokasi.value.trim(); 
-    
-    if (lokasi) {
-        ambilDataCuaca(lokasi);
-    } else {
-        pesanLokasi.textContent = 'Mohon masukkan nama lokasi.';
+    e.preventDefault();
+    const lokasi = inputLokasi.value.trim();
+
+    if (!lokasi) {
+        // User klik submit tapi kosong
+        kotakPrediksi.classList.remove('error');
         kotakPrediksi.style.backgroundColor = 'var(--color-pale-pink)';
+        pesanLokasi.textContent = 'Mohon masukkan nama lokasi.';
         pesanPrediksi.innerHTML = 'Cari lokasi untuk melihat hasilnya.';
+        return;
     }
+
+    // Kalau ada input lokasi → panggil API
+    ambilDataCuaca(lokasi);
 });
