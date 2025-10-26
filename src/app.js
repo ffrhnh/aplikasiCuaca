@@ -1,14 +1,37 @@
 const path = require('path')
 const express = require('express')
 const hbs = require('hbs')
+const axios = require('axios'); // kita pakai axios buat HTTP call
 const geocode = require('./utils/geocode') 
 const forecast = require('./utils/prediksiCuaca')
-const axios = require('axios'); // kita pakai axios buat HTTP call
+// Pastikan file .env dimuat di awal file
+require('dotenv').config(); 
 
 const app = express();
 const port = process.env.PORT || 4000
 
+// Kunci utama untuk mendebug (akan menunjukkan nilai dari .env atau hosting)
 console.log('MAP sekarang adalah:', process.env.MAP)
+
+// ====================================================================
+// FUNGSI PEMBANTU (Helper)
+// Mengubah fungsi forecast berbasis callback menjadi Promise berbasis async/await
+// ====================================================================
+
+const forecastPromise = (latitude, longitude) => {
+    return new Promise((resolve, reject) => {
+        forecast(latitude, longitude, (error, dataPrediksi) => {
+            if (error) {
+                return reject(new Error(error)); // Bungkus error agar ditangkap catch
+            }
+            resolve(dataPrediksi);
+        });
+    });
+};
+
+// ====================================================================
+// KONFIGURASI EXPRESS
+// ====================================================================
 
 // Jalur untuk folder 'public' (static assets)
 const direktoriPublic = path.join(__dirname, '../public') 
@@ -27,6 +50,10 @@ hbs.registerPartials(direktoriPartials)
 // setup direktori statis
 app.use(express.static(direktoriPublic))
 
+// ====================================================================
+// ROUTE HANDLERS
+// ====================================================================
+
 // halaman utama
 app.get('', (req, res) => {
     res.render('index', {
@@ -35,17 +62,16 @@ app.get('', (req, res) => {
     })
 })
 
-// HALAMAN BARU: Berita
+// HALAMAN: Berita
 app.get('/berita', async (req, res) => {
-    const API_KEY_VALUE = '12ff93a43ec22bac95f6fbbb8cfc499b'; 
+    // Gunakan process.env.MEDIASTACK_KEY
+    const API_KEY_VALUE = process.env.MEDIASTACK_KEY || '12ff93a43ec22bac95f6fbbb8cfc499b'; 
     
-    // 2. PERBAIKAN ENDPOINT (Menggunakan variabel API_KEY_VALUE dengan benar)
-    const endpoint = `https://api.mediastack.com/v1/news?access_key=${API_KEY_VALUE}&languages=en&limit=10&`;
+    const endpoint = `https://api.mediastack.com/v1/news?access_key=${API_KEY_VALUE}&languages=en&limit=10`;
 
     try {
-        // Menggunakan axios yang sudah Anda impor di atas
         const response = await axios.get(endpoint);
-        const data = response.data; // Axios otomatis mengurai JSON ke .data
+        const data = response.data;
 
         if (data.error) {
             console.error('Mediastack Error:', data.error.message);
@@ -69,7 +95,6 @@ app.get('/berita', async (req, res) => {
     }
 });
 
-// ... (Sisa kode app.js tetap sama) ...
 // halaman bantuan
 app.get('/bantuan', (req, res) => {
     res.render('bantuan', {
@@ -87,32 +112,39 @@ app.get('/tentang', (req, res) => {
     })
 })
 
-// endpoint infoCuaca (API JSON)
-app.get('/infoCuaca', (req, res) => {
+// endpoint infoCuaca (API JSON) - PERBAIKAN UTAMA
+app.get('/infoCuaca', async (req, res) => {
     if (!req.query.address) {
         return res.send({
             error: 'Kamu harus memasukan lokasi yang ingin dicari'
-        })
+        });
     }
+    
+    const address = req.query.address;
 
-    geocode(req.query.address, (error, { latitude, longitude, location } = {}) => {
-        if (error) {
-            return res.send({ error })
-        }
+    try {
+        // 1. Ambil data Geocoding (menggunakan fungsi geocode yang sudah diubah menjadi async/await)
+        // Pastikan geocode.js Anda menggunakan async/await dan melempar error
+        const { latitude, longitude, location } = await geocode(address);
 
-        forecast(latitude, longitude, (error, dataPrediksi) => {
-            if (error) {
-                return res.send({ error })
-            }
+        // 2. Ambil data Prediksi Cuaca (menggunakan Promise Helper)
+        const dataPrediksi = await forecastPromise(latitude, longitude);
 
-            res.send({
-                prediksiCuaca: dataPrediksi,
-                lokasi: location,
-                address: req.query.address
-            })
-        })
-    })
-})
+        // 3. Kirim respons sukses
+        res.send({
+            prediksiCuaca: dataPrediksi,
+            lokasi: location,
+            address: address
+        });
+
+    } catch (error) {
+        // Tangani semua error dari geocode atau forecast
+        console.error('FINAL API ERROR:', error.message);
+        res.send({
+            error: error.message || 'Terjadi kesalahan tidak terduga di server.'
+        });
+    }
+});
 
 // khusus bantuan/*
 app.get('/bantuan/*', (req, res) => {
