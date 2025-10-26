@@ -1,28 +1,36 @@
-const axios = require('axios');
+const axios = require('axios'); // KUNCI: Pastikan AXIOS diimpor di sini
 
-const forecast = (latitude, longitude, callback) => {
-    // IMPORTANT: Weatherstack free plan pakai HTTP, bukan HTTPS
-    const url = 'http://api.weatherstack.com/current?access_key=76fb2cb70d55ee6f756d3213b5e22c1a&query=' 
-        + latitude + ',' + longitude + '&units=m'
+const forecast = async (latitude, longitude, callback) => {
+    // Pastikan kunci ini disetel di .env atau dashboard hosting Anda
+    const WEATHERSTACK_KEY = process.env.WEATHERSTACK_KEY; 
+    
+    if (!WEATHERSTACK_KEY) {
+        // Mengubah menjadi Error agar ditangkap oleh Promise di app.js
+        return callback('Kunci API cuaca tidak disetel (WEATHERSTACK_KEY)', undefined); 
+    }
+    
+    // Gunakan HTTPS untuk koneksi yang lebih andal 
+    const url = `http://api.weatherstack.com/current?access_key=${WEATHERSTACK_KEY}&query=${latitude},${longitude}&units=m`;
+    
+    try {
+        const res = await axios.get(url);
+        const data = res.data;
 
-    request({ url, json: true }, (err, res) => {
-        if (err) {
-            // Gagal koneksi ke weatherstack (internet / DNS / dsb)
-            return callback('Tidak dapat terkoneksi ke layanan cuaca', undefined)
-        } else if (res.body.error) {
-            // Weatherstack balikin error (misal: key salah / quota habis)
-            return callback('Lokasi tidak ditemukan oleh layanan cuaca', undefined)
-        } else {
-            // Ambil data cuaca
-            const curr = res.body.current
-            const desc = curr.weather_descriptions && curr.weather_descriptions[0]
-
-            const resultTeks = `Saat ini ${desc}. Suhu ${curr.temperature}°C. Terasa seperti ${curr.feelslike}°C. Kelembapan ${curr.humidity}%. Kemungkinan hujan ${curr.precip}%.`
-
-            // callback sukses
-            callback(undefined, resultTeks)
+        if (data.error) {
+            return callback('Lokasi tidak ditemukan atau kunci API cuaca salah', undefined);
         }
-    })
+        
+        const curr = data.current;
+        const desc = curr.weather_descriptions && curr.weather_descriptions[0];
+
+        const resultTeks = `Saat ini ${desc}. Suhu ${curr.temperature}°C. Terasa seperti ${curr.feelslike}°C. Kelembapan ${curr.humidity}%. Kemungkinan hujan ${curr.precip}%.`;
+
+        // callback sukses
+        callback(undefined, resultTeks);
+
+    } catch (err) {
+        callback('Tidak dapat terkoneksi ke layanan cuaca. Cek koneksi.', undefined);
+    }
 }
 
-module.exports = forecast
+module.exports = forecast;
