@@ -9,7 +9,7 @@ const forecast = async (latitude, longitude) => {
         throw new Error('Kunci API cuaca tidak disetel (WEATHERSTACK_KEY).');
     }
 
-    const url = `https://api.weatherstack.com/current?access_key=${WEATHERSTACK_KEY}&query=${latitude},${longitude}&units=m`;
+    const url = `http://api.weatherstack.com/current?access_key=${WEATHERSTACK_KEY}&query=${latitude},${longitude}&units=m`;
 
     try {
         const res = await axios.get(url);
