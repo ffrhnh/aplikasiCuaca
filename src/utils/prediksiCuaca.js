@@ -3,6 +3,8 @@ const axios = require('axios');
 const forecast = async (latitude, longitude) => {
     const WEATHERSTACK_KEY = process.env.WEATHERSTACK_KEY;
 
+    console.log('DEBUG WEATHERSTACK_KEY (server):', WEATHERSTACK_KEY ? 'ADA' : 'TIDAK ADA');
+
     if (!WEATHERSTACK_KEY) {
         throw new Error('Kunci API cuaca tidak disetel (WEATHERSTACK_KEY).');
     }
